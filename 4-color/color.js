@@ -5,16 +5,17 @@ let gl = canvas.getContext('webgl');
 //【1】定义 shader source
 let vs_source = `
     attribute vec4 a_Position;
-    attribute float a_PointSize;
+    attribute vec4 a_Color;
+    varying vec4 v_Color;
     void main(){
         gl_Position = a_Position;
-        gl_PointSize = a_PointSize;
+        v_Color = a_Color;
     }`;
 let fs_source = `
     precision mediump float;
-    uniform vec4 u_FragColor;
+    varying vec4 v_Color;
     void main(){
-        gl_FragColor = u_FragColor;
+        gl_FragColor = v_Color;
     }`;
 
 
@@ -40,16 +41,32 @@ gl.useProgram(glProgram);
 
 
 //【4】控制着色器（shader），并绘制
-let a_Position = gl.getAttribLocation(glProgram,'a_Position');
-gl.vertexAttrib3f(a_Position, 0.5, 0.0, 0.0);
+// 用缓冲区控制顶点
+let vertices = new Float32Array([
+  0.0, 0.5, 1.0, 0.0, 0.0,
+  -0.5, -0.5, 0.0, 1.0, 0.0,
+  0.5, -0.5, 0.0, 0.0, 1.0,
+]);
+let n = 3;//点的个数
+let FSIZE = vertices.BYTES_PER_ELEMENT;
 
-let a_PointSize = gl.getAttribLocation(glProgram, 'a_PointSize');
-gl.vertexAttrib1f(a_PointSize, 40.0);
+let vertexBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-let u_FragColor = gl.getUniformLocation(glProgram, 'u_FragColor');
-gl.uniform4f(u_FragColor, 0.0, 0.6, 0.6, 1.0);
+
+let a_Position = gl.getAttribLocation(glProgram, 'a_Position');
+gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 5 * FSIZE, 0);
+gl.enableVertexAttribArray(a_Position);
+
+let a_Color = gl.getAttribLocation(glProgram, 'a_Color');
+gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 5 * FSIZE, 2 * FSIZE);
+gl.enableVertexAttribArray(a_Color);
+
+gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
 
 gl.clearColor(0.5, 0.5, 0.5, 1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
-gl.drawArrays(gl.POINTS, 0, 1);
+gl.drawArrays(gl.TRIANGLES, 0, n);
