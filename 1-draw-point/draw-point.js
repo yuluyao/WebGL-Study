@@ -5,7 +5,7 @@
 // use program
 
 let canvas = document.getElementById('canvas');
-let gl = canvas.getContext('webgl');
+let gl = initWebGLRenderingContext(canvas);
 
 
 //【1】定义 shader source
@@ -20,25 +20,26 @@ let fs_source = `
     }`;
 
 
-//【2】shader source -> shader
-let vertexShader = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(vertexShader, vs_source);
-gl.compileShader(vertexShader);
-
-let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-gl.shaderSource(fragmentShader, fs_source);
-gl.compileShader(fragmentShader);
-
-
-//【3】shader -> WebGLProgram
-let glProgram = gl.createProgram();
-
-// 先 attach
-gl.attachShader(glProgram, vertexShader);
-gl.attachShader(glProgram, fragmentShader);
-
-gl.linkProgram(glProgram);
-gl.useProgram(glProgram);
+// //【2】shader source -> shader
+// let vertexShader = gl.createShader(gl.VERTEX_SHADER);
+// gl.shaderSource(vertexShader, vs_source);
+// gl.compileShader(vertexShader);
+//
+// let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+// gl.shaderSource(fragmentShader, fs_source);
+// gl.compileShader(fragmentShader);
+//
+//
+// //【3】shader -> WebGLProgram
+// let glProgram = gl.createProgram();
+//
+// // 先 attach
+// gl.attachShader(glProgram, vertexShader);
+// gl.attachShader(glProgram, fragmentShader);
+//
+// gl.linkProgram(glProgram);
+// gl.useProgram(glProgram);
+initShader(gl, vs_source, fs_source);
 
 
 //【4】控制着色器（shader），并绘制
