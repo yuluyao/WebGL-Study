@@ -58,6 +58,8 @@ let curScale = 1.0;
   let cuboid = new Cuboid(399589.072, 400469.072, 3995118.062, 3997558.062, 732, 1268);
   let n = initVertexBuffer(gl, cuboid);
 
+  initEventHandlers(canvas);
+
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
@@ -147,4 +149,57 @@ function setMvpMatrix(gl, canvas, cuboid) {
   let mvpMatrix = new Matrix4();
   mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
   gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+}
+
+
+function initEventHandlers(canvas) {
+  var dragging = false;         // Dragging or not
+  var lastX = -1, lastY = -1;   // Last position of the mouse
+
+  //鼠标按下
+  canvas.onmousedown = function (ev) {
+    var x = ev.clientX;
+    var y = ev.clientY;
+    // Start dragging if a moue is in <canvas>
+    var rect = ev.target.getBoundingClientRect();
+    if (rect.left <= x && x < rect.right && rect.top <= y && y < rect.bottom) {
+      lastX = x;
+      lastY = y;
+      dragging = true;
+    }
+  };
+
+  //鼠标离开时
+  canvas.onmouseleave = function (ev) {
+    dragging = false;
+  };
+
+  //鼠标释放
+  canvas.onmouseup = function (ev) {
+    dragging = false;
+  };
+
+  //鼠标移动
+  canvas.onmousemove = function (ev) {
+    var x = ev.clientX;
+    var y = ev.clientY;
+    if (dragging) {
+      var factor = 100 / canvas.height; // The rotation ratio
+      var dx = factor * (x - lastX);
+      var dy = factor * (y - lastY);
+      currentAngle[0] = currentAngle[0] + dy;
+      currentAngle[1] = currentAngle[1] + dx;
+    }
+    lastX = x;
+    lastY = y;
+  };
+
+  //鼠标缩放
+  canvas.onmousewheel = function (event) {
+    if (event.wheelDelta > 0) {
+      curScale = curScale * 1.1;
+    } else {
+      curScale = curScale * 0.9;
+    }
+  };
 }
