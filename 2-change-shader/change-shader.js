@@ -20,7 +20,7 @@
 
 
   initShader(gl, vs_source, fs_source);
-  initVertexBuffer(gl);
+  initVertex(gl);
 
 
   gl.clearColor(0.5, 0.5, 0.5, 1.0);
@@ -29,7 +29,7 @@
 }
 
 
-function initVertexBuffer(gl,) {
+function initVertex(gl) {
   let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
   gl.vertexAttrib3f(a_Position, 0.5, 0.0, 0.0);
 

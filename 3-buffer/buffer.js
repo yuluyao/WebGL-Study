@@ -27,7 +27,7 @@
 
 function initVertexBuffer(gl) {
   //【4】控制着色器（shader），并绘制
-// 用缓冲区控制顶点
+  // 用缓冲区控制顶点
   let vertices = new Float32Array([
     0.0, 0.5,
     -0.5, -0.5,
@@ -38,9 +38,9 @@ function initVertexBuffer(gl) {
   gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
   let a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-//将缓冲区对象分配给 a_Position 变量
+  //将缓冲区对象分配给 a_Position 变量
   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
-//连接 a_Position 变量与分配给它的缓冲区对象
+  //连接 a_Position 变量与分配给它的缓冲区对象
   gl.enableVertexAttribArray(a_Position);
   return 3;
 }
